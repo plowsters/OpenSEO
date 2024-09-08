@@ -47,7 +47,7 @@ class OpenSEO(tk.Tk):
 
     def create_widgets(self):
         # Configure rows and columns to scale proportionally
-        self.grid_columnconfigure(0, weight=1)  # Set equal weight for all columns
+        self.grid_columnconfigure(0, weight=1)  # Set weight for columns to control resizing behavior
         self.grid_columnconfigure(1, weight=2)
         self.grid_columnconfigure(2, weight=2)
         self.grid_rowconfigure(0, weight=1)
@@ -56,7 +56,7 @@ class OpenSEO(tk.Tk):
         self.grid_rowconfigure(3, weight=1)
 
         # Left Panel for AI Assistant Text
-        ai_text_frame = ttk.Frame(self, padding="5 5 5 5", borderwidth=2, relief="solid")
+        ai_text_frame = ttk.Frame(self, padding="5 10 5 10", borderwidth=2, relief="solid")
         ai_text_frame.grid(row=0, column=0, rowspan=4, sticky="nsew")
 
         # AI Assistant Text Label
@@ -68,10 +68,14 @@ class OpenSEO(tk.Tk):
         self.ai_text_label = ttk.Label(
             ai_text_frame,
             textvariable=self.ai_text_label_var,
-            wraplength=self.winfo_width() // 3 - 10,  # Initially set to 1/3 of the window width
-            justify="left"
+            wraplength=ai_text_frame.winfo_width() - 10,
+            justify="left",
+            anchor="n"  # Anchor the text to the top (north) of the label
         )
-        self.ai_text_label.pack(fill=tk.BOTH, expand=True)
+        self.ai_text_label.pack(fill=tk.X, anchor='n', expand=True)  # Align at the top and fill horizontally
+
+        # Dynamically update wrap length on window resize
+        ai_text_frame.bind("<Configure>", lambda e: self.ai_text_label.config(wraplength=e.width - 10))
 
         # Keyword Trend Analysis Graph (Top Right Section)
         keyword_trend_frame = ttk.Frame(self, padding="5 5 5 5", borderwidth=2, relief="solid")
@@ -138,9 +142,11 @@ class OpenSEO(tk.Tk):
         exit_button.grid(row=3, column=1, sticky="e", pady=10)
 
     def on_resize(self, event):
-        """Adjust the wrap length of the AI assistant text dynamically based on the width of one column."""
-        # Calculate the new wrap length as the width of one column
-        new_wrap_length = max(100, (self.winfo_width() // 3) - 10)
+        """Adjust the wrap length of the AI assistant text dynamically based on the actual width of the first column."""
+        # Calculate the width of the window and determine the width of one-third of the window
+        total_width = self.winfo_width()
+        column0_width = (total_width * 1) / (1 + 2 + 2)  # Proportional width based on column weights
+        new_wrap_length = max(100, int(column0_width) - 10)
         self.ai_text_label.config(wraplength=new_wrap_length)
 
 # Run the App
