@@ -1,5 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
+from scrapy.crawler import CrawlerProcess
+from seo_scraper.spiders.content_spider import AiContentSpider
+from db_setup import create_database  # Assuming this file is in the same directory
 
 # Placeholder functions for each feature (to be replaced with real functionality)
 def placeholder_function():
@@ -13,6 +16,10 @@ def keyword_trend_analysis():
 
 def competitor_analysis():
     print("Competitor Analysis placeholder.")
+    # Run the Scrapy spider
+    process = CrawlerProcess()
+    process.crawl(AiContentSpider)
+    process.start()
 
 def keyword_gap_analysis():
     print("Keyword Gap Analysis placeholder.")
@@ -151,5 +158,8 @@ class OpenSEO(tk.Tk):
 
 # Run the App
 if __name__ == "__main__":
+    # Set up the SQLite database schema
+    create_database()
+    
     app = OpenSEO()
     app.mainloop()

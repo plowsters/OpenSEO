@@ -47,8 +47,14 @@ CONCURRENT_REQUESTS_PER_DOMAIN = 2
 #SPIDER_MIDDLEWARES = {
 #    "seo_scraper.middlewares.SeoScraperSpiderMiddleware": 543,
 #}
+
+import chromedriver_autoinstaller
+
+# Auto-install chromedriver and set the path
+chromedriver_autoinstaller.install()  # This will install chromedriver locally in the venv
+
 SELENIUM_DRIVER_NAME = 'chrome'
-SELENIUM_DRIVER_EXECUTABLE_PATH = '/usr/bin/chromedriver'  # Update to your chromedriver path
+SELENIUM_DRIVER_EXECUTABLE_PATH = chromedriver_autoinstaller.get_chromedriver_path()  # Update to your chromedriver path
 SELENIUM_DRIVER_ARGUMENTS = ['--headless']
 
 # Enable or disable downloader middlewares

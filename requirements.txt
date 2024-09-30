@@ -1,0 +1,4 @@
+scrapy
+scrapy-selenium
+spacy
+chromedriver-autoinstaller
